@@ -1,5 +1,4 @@
-﻿using Orleans;
-namespace ShoppingApp.Abstractions;
+﻿namespace ShoppingApp.Abstractions;
 
 public interface IInventoryGrain : IGrainWithStringKey
 {    

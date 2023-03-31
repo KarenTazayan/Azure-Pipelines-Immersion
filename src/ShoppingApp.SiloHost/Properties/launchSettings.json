@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "ShoppingApp.SiloHost": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:50117;http://localhost:50118"
+    }
+  }
+}

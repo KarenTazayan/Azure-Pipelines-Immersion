@@ -43,18 +43,6 @@
 --
 -- 7. In the storage operations queries the columns need to be in the exact same order
 -- since the storage table operations support optionally streaming.
-
--- This table defines Orleans operational queries. Orleans uses these to manage its operations,
--- these are the only queries Orleans issues to the database.
--- These can be redefined (e.g. to provide non-destructive updates) provided the stated interface principles hold.
-IF OBJECT_ID('dbo.OrleansQuery', 'U') IS NULL CREATE TABLE OrleansQuery
-(
-	QueryKey VARCHAR(64) NOT NULL,
-	QueryText VARCHAR(8000) NOT NULL,
-
-	CONSTRAINT OrleansQuery_Key PRIMARY KEY(QueryKey)
-);
-
 CREATE TABLE OrleansStorage
 (
     -- These are for the book keeping. Orleans calculates
@@ -74,16 +62,8 @@ CREATE TABLE OrleansStorage
     GrainIdExtensionString    NVARCHAR(512) NULL,
     ServiceId                NVARCHAR(150) NOT NULL,
 
-    -- The usage of the Payload records is exclusive in that
-    -- only one should be populated at any given time and two others
-    -- are NULL. The types are separated to advantage on special
-    -- processing capabilities present on database engines (not all might
-    -- have both JSON and XML types.
-    --
-    -- One is free to alter the size of these fields.
+    -- Payload
     PayloadBinary    VARBINARY(MAX) NULL,
-    PayloadXml        XML NULL,
-    PayloadJson        NVARCHAR(MAX) NULL,
 
     -- Informational field, no other use.
     ModifiedOn DATETIME2(3) NOT NULL,
@@ -143,8 +123,6 @@ VALUES
         UPDATE OrleansStorage
         SET
             PayloadBinary = @PayloadBinary,
-            PayloadJson = @PayloadJson,
-            PayloadXml = @PayloadXml,
             ModifiedOn = GETUTCDATE(),
             Version = Version + 1,
             @NewGrainStateVersion = Version + 1,
@@ -175,8 +153,6 @@ VALUES
             GrainIdExtensionString,
             ServiceId,
             PayloadBinary,
-            PayloadJson,
-            PayloadXml,
             ModifiedOn,
             Version
         )
@@ -189,8 +165,6 @@ VALUES
             @GrainIdExtensionString,
             @ServiceId,
             @PayloadBinary,
-            @PayloadJson,
-            @PayloadXml,
             GETUTCDATE(),
             1
          WHERE NOT EXISTS
@@ -228,8 +202,6 @@ VALUES
     UPDATE OrleansStorage
     SET
         PayloadBinary = NULL,
-        PayloadJson = NULL,
-        PayloadXml = NULL,
         ModifiedOn = GETUTCDATE(),
         Version = Version + 1,
         @NewGrainStateVersion = Version + 1
@@ -261,8 +233,6 @@ VALUES
     -- should guarantee the execution time is robustly basically the same from query-to-query.
     SELECT
         PayloadBinary,
-        PayloadXml,
-        PayloadJson,
         Version
     FROM
         OrleansStorage

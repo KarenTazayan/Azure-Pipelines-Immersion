@@ -17,7 +17,7 @@ public sealed class InventoryGrain : Grain, IInventoryGrain
         [PersistentState(stateName: "Inventory", storageName: PersistentStorageConfig.AzureStorageName)]
         IPersistentState<HashSet<string>> state) => _productIds = state;
 
-    public override Task OnActivateAsync() => PopulateProductCacheAsync();
+    public override Task OnActivateAsync(CancellationToken cancellationToken) => PopulateProductCacheAsync();
 
     Task<HashSet<ProductDetails>> IInventoryGrain.GetAllProductsAsync() =>
         Task.FromResult(_productCache.Values.ToHashSet());

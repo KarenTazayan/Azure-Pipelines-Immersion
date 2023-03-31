@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using Orleans;
 using Orleans.Runtime;
 using ShoppingApp.Abstractions.Configuration;
 

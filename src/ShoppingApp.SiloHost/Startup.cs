@@ -1,4 +1,6 @@
 using Microsoft.ApplicationInsights.Extensibility;
+using System.Reflection;
+using ShoppingApp.Common;
 
 namespace ShoppingApp.SiloHost;
 
@@ -18,7 +20,9 @@ public class Startup
     {
         app.Run(async context =>
         {
-            await context.Response.WriteAsync("Running...");
+            var assembly = Assembly.GetExecutingAssembly();
+            var version = AppInfo.RetrieveInformationalVersion(assembly);
+            await context.Response.WriteAsync($"App version: [ {version} ]. Status: Running...");
         });
     }
 }

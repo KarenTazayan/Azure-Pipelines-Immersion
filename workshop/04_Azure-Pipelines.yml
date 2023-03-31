@@ -1,4 +1,9 @@
 # https://aka.ms/yaml
+variables:
+  # Staging 'sa1, sa2 sa3, ...'
+  # s - staging a - advanced => sa
+  nameSuffix: 'sa1'
+  appNamePrefix: 'shoppingapp1'
 
 trigger:
 - main
@@ -7,40 +12,19 @@ stages:
 - stage: Build
   displayName: Build stage
   pool:
-    name: Azure Pipelines
-    vmImage: 'windows-2022'
+    name: Default
     demands:
-        - msbuild
-        - visualstudio
+        - dotnet
   variables:
     buildPlatform: 'Any CPU'
     buildConfiguration: 'Release'
   jobs:
-  - job: Build_Solution
-    displayName: Whole solution build process
-    steps:
-    - task: UseDotNet@2
-      displayName: 'Use .NET 6.0.200 sdk'
-      inputs:
-        packageType: sdk
-        version: 6.0.200
-
-    - task: NuGetToolInstaller@1
-      displayName: 'Use NuGet 5.x'
-      inputs:
-        versionSpec: 5.x
-
-    - task: NuGetCommand@2
-      displayName: 'Restore NuGet Packages'
-      inputs:
-        command: 'restore'
-        feedsToUse: 'config'
-        nugetConfigPath: 'nuget.config'
-        restoreSolution: 'ShoppingApp.sln'
-
-    - task: VSBuild@1
-      displayName: 'Build solution **\*.sln'
-      inputs:
-        solution: '**\*.sln'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
+    - job: Build_Solution
+      displayName: Whole solution build process
+      steps:
+      - task: DotNetCoreCLI@2
+        displayName: 'Build solution ShoppingApp.sln'
+        inputs:
+          command: build
+          projects: 'ShoppingApp.sln'
+          configuration: '$(buildConfiguration)'

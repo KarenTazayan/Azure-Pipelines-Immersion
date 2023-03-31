@@ -1,10 +1,26 @@
 using Microsoft.ApplicationInsights.Extensibility;
 using MudBlazor.Services;
+using Orleans.Configuration;
 using ShoppingApp.WebUI;
-using ShoppingApp.WebUI.Cluster;
+using ShoppingApp.WebUI.Extensions;
 using ShoppingApp.WebUI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Scalability on Azure Container Apps for Blazor based WebUI.
+if (!builder.Environment.IsDevelopment())
+{
+    var azureBlobStorageFobWebUiUri = GlobalConfig.AzureBlobStorageFobWebUiUri;
+    var azureKeyVaultFobWebUiUri = GlobalConfig.AzureKeyVaultFobWebUiUri;
+
+    builder.UseCentralizedKeys(azureBlobStorageFobWebUiUri, azureKeyVaultFobWebUiUri);
+
+    builder.Services.AddSignalR().AddAzureSignalR(options =>
+    {
+        options.ConnectionString = GlobalConfig.AzureSignalRConnection;
+        options.ServerStickyMode = Microsoft.Azure.SignalR.ServerStickyMode.Required;
+    });
+}
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -27,12 +43,29 @@ builder.Services.AddApplicationInsightsTelemetry(options =>
 });
 
 // Configure Microsoft Orleans Client
-builder.Services.AddScoped(_ =>
+if (builder.Environment.IsDevelopment())
 {
-    var client = new Client().Build();
-    client.Connect().Wait();
-    return client;
-});
+    builder.Host.UseOrleansClient((_, clientBuilder) =>
+    {
+        clientBuilder.Configure<ClusterOptions>(_ => { })
+            .UseLocalhostClustering();
+    });
+}
+else
+{
+    builder.Host.UseOrleansClient((_, clientBuilder) =>
+    {
+        clientBuilder.Configure<ClusterOptions>(options =>
+            {
+                options.ClusterId = "ShoppingApp";
+                options.ServiceId = "ShoppingAppService";
+            })
+            .UseAzureStorageClustering(options =>
+            {
+                options.ConfigureTableServiceClient(GlobalConfig.AzureStorageConnection);
+            });
+    });
+}
 
 var app = builder.Build();
 

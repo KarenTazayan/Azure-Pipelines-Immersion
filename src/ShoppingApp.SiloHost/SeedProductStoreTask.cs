@@ -1,5 +1,4 @@
-﻿using Orleans;
-using Orleans.Runtime;
+﻿using Orleans.Runtime;
 using ShoppingApp.Abstractions;
 using ShoppingApp.Abstractions.Configuration;
 

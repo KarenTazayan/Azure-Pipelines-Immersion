@@ -1,0 +1,3 @@
+# docker build -t azure-pipelines-agents-ubuntu-20.04:31032023 .
+# docker build -t azure-pipelines-agents-debian-10.13:31032023 .
+# docker build -t azure-pipelines-agents-playwright-1.32.0:31032023 .

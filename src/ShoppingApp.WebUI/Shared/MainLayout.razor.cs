@@ -1,15 +1,28 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using MudBlazor;
+using ShoppingApp.Common;
 using ShoppingApp.WebUI.Services;
+using System.Reflection;
 using MudSeverity = MudBlazor.Severity;
 
 namespace ShoppingApp.WebUI.Shared;
 
-public partial class MainLayout
+public partial class MainLayout : IDisposable
 {
-    const string PrefersDarkThemeKey = "prefers-dark-scheme";
-    
-    readonly MudTheme _theme = new()
+    private const string PrefersDarkThemeKey = "prefers-dark-scheme";
+
+    public string AppVersion
+    {
+        get
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            return AppInfo.RetrieveInformationalVersion(assembly);
+        }
+    }
+
+    private readonly MudTheme _theme = new()
     {
         Palette = new Palette()
         {
@@ -49,14 +62,27 @@ public partial class MainLayout
         },
     };
 
-    bool _drawerOpen = true;
-    bool _isDarkTheme;
+    private bool _drawerOpen = true;
+    private bool _isDarkTheme;
 
     [Inject]
     public ToastService ToastService { get; set; } = null!;
 
     [Inject]
     public ISnackbar Snackbar { get; set; } = null!;
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = null!;
+
+    [Inject]
+    private TelemetryClient TelemetryClient { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        // Subscribe to the event
+        NavigationManager.LocationChanged += LocationChanged;
+        base.OnInitialized();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -75,20 +101,31 @@ public partial class MainLayout
         }
     }
 
-    async Task OnToggledChangedAsync(bool value) =>
+    private async Task OnToggledChangedAsync(bool value) =>
         await LocalStorage.SetItemAsync(
             PrefersDarkThemeKey, (_isDarkTheme = value).ToString());
 
-    Task OnToastRequested((string Title, string Message) tuple) =>
+    private Task OnToastRequested((string Title, string Message) tuple) =>
         InvokeAsync(() =>
         {
             var (_, message) = tuple;
 
             Snackbar.Add(
-                message, 
+                message,
                 MudSeverity.Success,
                 options => options.CloseAfterNavigation = true);
         });
 
-    void DrawerToggle() => _drawerOpen = !_drawerOpen;
+    private void DrawerToggle() => _drawerOpen = !_drawerOpen;
+
+    private void LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        string navigationMethod = e.IsNavigationIntercepted ? "HTML" : "code";
+        //TelemetryClient.TrackPageView(e.Location);
+    }
+
+    void IDisposable.Dispose()
+    {
+        NavigationManager.LocationChanged -= LocationChanged;
+    }
 }

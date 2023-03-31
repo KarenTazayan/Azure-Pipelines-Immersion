@@ -1,6 +1,6 @@
 ﻿namespace ShoppingApp.Abstractions;
 
-[Serializable, Immutable]
+[GenerateSerializer, Immutable]
 public sealed record CartItem(
     string UserId, int Quantity, ProductDetails Product)
 {

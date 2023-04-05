@@ -95,7 +95,7 @@ az account show --query id --output tsv
 ```
 Configure its access to Azure subscription:
 ```
-az ad sp create-for-rbac --name azure-pipelines-immersion-1 --role Owner --scopes /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+az ad sp create-for-rbac --name Azure-Pipelines-Immersion-1 --role Owner --scopes /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 Cretae a new [Azure Resource Manager service connection](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/connect-to-azure?view=azure-devops#create-an-azure-resource-manager-service-connection-with-an-existing-service-principal) with an existing service principal (azure-pipelines-immersion-1), required name: **DefaultAzureServiceConnection**. Choose **Verify connection** to validate the settings you entered
 Install [GitTools](https://marketplace.visualstudio.com/items?itemName=gittools.gittools) for the current Azure DevOps Organization. 

@@ -24,14 +24,14 @@ public partial class MainLayout : IDisposable
 
     private readonly MudTheme _theme = new()
     {
-        Palette = new Palette()
+        Palette = new PaletteLight()
         {
             Tertiary = "#7e6fff",
             DrawerIcon = "#aaa9b9",
             DrawerText = "#aaa9b9",
             DrawerBackground = "#303030"
         },
-        PaletteDark = new Palette()
+        PaletteDark = new PaletteDark()
         {
             Primary = "#7e6fff",
             Tertiary = "#7e6fff",

@@ -45,6 +45,6 @@ public class TokenVerificationTests : TestBase
         var decodedToken = jwtTokenHandler.ReadJwtToken(accessToken);
 
         // Assert
-        Assert.True(decodedToken.Issuer.Equals("http://localhost:5001"));
+        Assert.Equal("http://localhost:5001", decodedToken.Issuer);
     }
 }

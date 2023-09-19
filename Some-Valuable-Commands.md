@@ -19,6 +19,6 @@ sudo docker login -u [user-name] --password-stdin [password]
 ```
 ### How to tag and push an image to Docker Hub?
 ```
-sudo docker tag [image id] [account or namespace]/azure-pipelines-agents-debian-10.13:11072023
-sudo docker push [account or namespace]/azure-pipelines-agents-debian-10.13:11072023
+sudo docker tag [image id] [account or namespace]/azure-pipelines-agents-debian-10.13:19092023
+sudo docker push [account or namespace]/azure-pipelines-agents-debian-10.13:19092023
 ```

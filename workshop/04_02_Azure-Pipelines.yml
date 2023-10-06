@@ -1,0 +1,34 @@
+trigger:
+- main
+
+stages:
+- stage: Build
+  displayName: Build stage
+  pool:
+    name: Default
+    demands:
+        - dotnet
+  variables:
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
+  jobs:
+    - job: Build_Solution
+      displayName: Whole solution build process
+      steps:
+      - task: CmdLine@2
+        displayName: 'Inspect Code with ReSharper CLI'
+        inputs:
+          script: |
+            dotnet tool install -g JetBrains.ReSharper.GlobalTools
+            jb inspectcode ShoppingApp.sln -f="Html;Xml" --profile="ShoppingApp.sln.DotSettings" -o="inspect-code-output" --properties:Configuration=$(buildConfiguration)
+      - task: PowerShell@2
+        displayName: 'Analyze ReSharper CLI Results'
+        inputs:
+          targetType: filePath
+          filePath: ./AnalyzeReSharperCLIResults.ps1
+      - task: DotNetCoreCLI@2
+        displayName: 'Build solution ShoppingApp.sln'
+        inputs:
+          command: build
+          projects: 'ShoppingApp.sln'
+          configuration: '$(buildConfiguration)'

@@ -1,18 +1,13 @@
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
-using System.Reflection;
 using ShoppingApp.Common;
+using System.Reflection;
 
 namespace ShoppingApp.SiloHost;
 
 internal class TelemetryInitializer : ITelemetryInitializer
 {
-    private readonly string _roleName;
-
-    public TelemetryInitializer()
-    {
-        _roleName = "ShoppingApp.SiloHost";
-    }
+    private readonly string _roleName = "ShoppingApp.SiloHost";
 
     public void Initialize(ITelemetry telemetry)
     {

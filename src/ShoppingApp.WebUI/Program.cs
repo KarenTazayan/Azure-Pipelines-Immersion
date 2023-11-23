@@ -1,7 +1,9 @@
 using Microsoft.ApplicationInsights.Extensibility;
 using MudBlazor.Services;
 using Orleans.Configuration;
+using Orleans.Hosting;
 using ShoppingApp.WebUI;
+using ShoppingApp.WebUI.Components;
 using ShoppingApp.WebUI.Extensions;
 using ShoppingApp.WebUI.Services;
 
@@ -23,9 +25,8 @@ if (!builder.Environment.IsDevelopment())
 }
 
 // Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 builder.Services.AddMudServices();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ShoppingCartService>();
@@ -72,16 +73,18 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
+    app.UseExceptionHandler("/Error", createScopeForErrors: true);
     // The default HSTS value is 30 days. You may want to change this
     // for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
-app.UseRouting();
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
+app.UseAntiforgery();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.Run();

@@ -304,7 +304,7 @@ resource siloHostCa 'Microsoft.App/containerApps@2022-10-01' = {
       ]
       ingress: {
         external: true
-        targetPort: 80
+        targetPort: 8080
       }
     }
     template: {
@@ -368,7 +368,7 @@ resource webUiCa 'Microsoft.App/containerApps@2022-10-01' = {
       ]
       ingress: {
         external: true
-        targetPort: 80
+        targetPort: 8080
       }
     }
     template: {

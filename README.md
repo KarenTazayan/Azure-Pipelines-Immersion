@@ -56,31 +56,31 @@ git clone https://dev.azure.com/azure-pipelines-immersion-1/_git/ShoppingApp
 ```
 and interop with it from Ubuntu-20.04 by the following way:
 ```
-$ cd /mnt/c/Repos/ShoppingApp/build/azure-pipelines-agents/debian-10.13/
-$ sudo docker build -t azure-pipelines-agents-debian-10.13:19092023 .
+$ cd /mnt/c/Repos/ShoppingApp/build/azure-pipelines-agents/debian-12.2/
+$ sudo docker build -t azure-pipelines-agents-debian-12.2:23112023 .
 ```
 
 ### 3. Create a self-hosted agents pool for the Azure DevOps organization.
 
 Build an agent docker image by using files from "build\azure-pipelines-agents" based on Debian image
 ```
-docker build -t azure-pipelines-agents-debian-10.13:19092023 .
+docker build -t azure-pipelines-agents-debian-12.2:23112023 .
 ```
 or on Ubuntu image.
 ```
-docker build -t azure-pipelines-agents-debian-10.13:19092023 .
+docker build -t azure-pipelines-agents-debian-12.2:23112023 .
 ```
 Also create Playwright image
 ```
-docker build -t azure-pipelines-agents-playwright-1.37.0:19092023 .
+docker build -t azure-pipelines-agents-playwright-1.40.0:23112023 .
 ```
 Create [Azure DevOps personal access token (PAT token)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate). For the scope select: Agent Pools (read, manage), Deployment group (read, manage).  
 Run Debian or Ubuntu based Azure Pipelines agent by using the following command:
 ```
 docker run -v /var/run/docker.sock:/var/run/docker.sock \
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
-    -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Debian-10.13 \
-    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-10.13 azure-pipelines-agents-debian-10.13:19092023
+    -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_debian-12.2 \
+    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_debian-12.2 azure-pipelines-agents-debian-12.2:23112023
 ```
 The syntax above uses PowerShell. If you use Bash shell, just replace "`" (backtick) with "\\" (backslash).  
   

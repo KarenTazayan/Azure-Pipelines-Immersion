@@ -7,7 +7,7 @@ public partial class NavMenu
 {
     private int _count = 0;
 
-    [Inject]
+    [Inject] 
     public ComponentStateChangedObserver Observer { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()

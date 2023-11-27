@@ -1,7 +1,7 @@
-﻿using Orleans;
-using ShoppingApp.Abstractions;
+﻿using ShoppingApp.Abstractions;
+using ShoppingApp.WebUI.Services;
 
-namespace ShoppingApp.WebUI.Services;
+namespace ShoppingApp.WebUI.Cart;
 
 public sealed class ShoppingCartService : BaseClusterService
 {

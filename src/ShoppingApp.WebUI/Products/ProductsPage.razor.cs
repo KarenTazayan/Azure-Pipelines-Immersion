@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using ShoppingApp.Abstractions;
-using ShoppingApp.WebUI.Components;
 using ShoppingApp.WebUI.Extensions;
 using ShoppingApp.WebUI.Services;
 
-namespace ShoppingApp.WebUI.Pages;
+namespace ShoppingApp.WebUI.Products;
 
-public sealed partial class Products
+public sealed partial class ProductsPage
 {
     private HashSet<ProductDetails>? _products;
     private ManageProductModal? _modal;
@@ -22,7 +21,7 @@ public sealed partial class Products
     public ProductService ProductService { get; set; } = null!;
 
     [Inject]
-    public IDialogService DialogService  { get; set; } = null!;
+    public IDialogService DialogService { get; set; } = null!;
 
     protected override async Task OnInitializedAsync() =>
         _products = await InventoryService.GetAllProductsAsync();

@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Components;
 using ShoppingApp.Abstractions;
+using ShoppingApp.WebUI.Cart;
 using ShoppingApp.WebUI.Services;
 
-namespace ShoppingApp.WebUI.Pages;
+namespace ShoppingApp.WebUI.Shop;
 
-public sealed partial class Shop
+public sealed partial class ShopPage
 {
     private HashSet<ProductDetails>? _products;
     private HashSet<CartItem>? _cartItems;

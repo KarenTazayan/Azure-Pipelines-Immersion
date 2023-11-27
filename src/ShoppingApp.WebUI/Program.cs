@@ -1,11 +1,12 @@
 using Microsoft.ApplicationInsights.Extensibility;
 using MudBlazor.Services;
 using Orleans.Configuration;
-using Orleans.Hosting;
 using ShoppingApp.WebUI;
-using ShoppingApp.WebUI.Components;
+using ShoppingApp.WebUI.Cart;
 using ShoppingApp.WebUI.Extensions;
+using ShoppingApp.WebUI.Products;
 using ShoppingApp.WebUI.Services;
+using ShoppingApp.WebUI.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 

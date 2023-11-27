@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using ShoppingApp.Abstractions;
 
-namespace ShoppingApp.WebUI.Components;
+namespace ShoppingApp.WebUI.Cart;
 
 public partial class ShoppingCartItem
 {

@@ -2,7 +2,7 @@
 using ShoppingApp.Abstractions;
 using ShoppingApp.WebUI.Extensions;
 
-namespace ShoppingApp.WebUI.Components;
+namespace ShoppingApp.WebUI.Products;
 
 public partial class PurchasableProductTable
 {

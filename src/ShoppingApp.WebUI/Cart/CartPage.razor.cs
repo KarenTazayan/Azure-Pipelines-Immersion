@@ -2,9 +2,9 @@
 using ShoppingApp.Abstractions;
 using ShoppingApp.WebUI.Services;
 
-namespace ShoppingApp.WebUI.Pages;
+namespace ShoppingApp.WebUI.Cart;
 
-public sealed partial class Cart
+public sealed partial class CartPage
 {
     private HashSet<CartItem>? _cartItems;
 

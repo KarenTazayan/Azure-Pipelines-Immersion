@@ -18,11 +18,11 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        app.Run(async context =>
+        app.Run(context =>
         {
             var assembly = Assembly.GetExecutingAssembly();
             var version = AppInfo.RetrieveInformationalVersion(assembly);
-            await context.Response.WriteAsync($"App version: [ {version} ]. Status: Running...");
+            return context.Response.WriteAsync($"App version: [ {version} ]. Status: Running...");
         });
     }
 }

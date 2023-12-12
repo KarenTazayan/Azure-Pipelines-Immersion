@@ -3,15 +3,10 @@ using ShoppingApp.WebUI.Services;
 
 namespace ShoppingApp.WebUI.Cart;
 
-public sealed class ShoppingCartService : BaseClusterService
+public sealed class ShoppingCartService(IHttpContextAccessor httpContextAccessor, IClusterClient client)
+	: BaseClusterService(httpContextAccessor, client)
 {
-    public ShoppingCartService(
-        IHttpContextAccessor httpContextAccessor, IClusterClient client) :
-        base(httpContextAccessor, client)
-    {
-    }
-
-    public Task<HashSet<CartItem>> GetAllItemsAsync() =>
+	public Task<HashSet<CartItem>> GetAllItemsAsync() =>
         TryUseGrain<IShoppingCartGrain, Task<HashSet<CartItem>>>(
             cart => cart.GetAllItemsAsync(),
             () => Task.FromResult(new HashSet<CartItem>()));

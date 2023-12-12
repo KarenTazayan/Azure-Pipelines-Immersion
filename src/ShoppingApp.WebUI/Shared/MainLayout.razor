@@ -13,7 +13,7 @@
 <MudLayout>
 	<MudAppBar Elevation="0">
 		<MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" 
-		               Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+		               Edge="Edge.Start" OnClick="@((_) => DrawerToggle())" />
 		<MudSpacer />
 		<MudText>App Version: @AppVersion</MudText>
 		<MudToggleIconButton Toggled="@_isDarkTheme" ToggledChanged=@OnToggledChangedAsync 

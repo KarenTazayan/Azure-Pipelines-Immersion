@@ -5,22 +5,19 @@ using ShoppingApp.Abstractions.Configuration;
 namespace ShoppingApp.Grains.Configuration;
 
 [UsedImplicitly]
-public class GlobalStartupGrain : Grain, IGlobalStartupGrain
+public class GlobalStartupGrain(
+	[PersistentState(stateName: "GlobalStartup", storageName: PersistentStorageConfig.AzureSqlName)]
+	IPersistentState<bool> state) : Grain, IGlobalStartupGrain
 {
-    private readonly IPersistentState<bool> _isProductStoreInitialized;
-
-    public GlobalStartupGrain(
-        [PersistentState(stateName: "GlobalStartup", storageName: PersistentStorageConfig.AzureSqlName)]
-        IPersistentState<bool> state) => _isProductStoreInitialized = state;
-
-    public Task<bool> IsProductStoreInitialized()
+	public Task<bool> IsProductStoreInitialized()
     {
-        return Task.FromResult(_isProductStoreInitialized.State);
+        return Task.FromResult(state.State);
     }
 
-    public async Task CompleteProductStoreInitialization()
+    public Task CompleteProductStoreInitialization()
     {
-        _isProductStoreInitialized.State = true;
-        await _isProductStoreInitialized.WriteStateAsync();
+	    state.State = true;
+
+	    return state.WriteStateAsync();
     }
 }

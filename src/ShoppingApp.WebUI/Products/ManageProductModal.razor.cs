@@ -13,7 +13,7 @@ public partial class ManageProductModal
     public ProductDetails Product { get; set; } = new();
 
     [CascadingParameter]
-    MudDialogInstance MudDialog { get; set; } = null!;
+    MudDialogInstance? MudDialog { get; set; }
 
     [Parameter, EditorRequired]
     public EventCallback<ProductDetails> ProductUpdated { get; set; }
@@ -51,7 +51,7 @@ public partial class ManageProductModal
 
     private async Task OnValidSubmitAsync()
     {
-        if (Product is not null && ProductUpdated.HasDelegate)
+        if (!string.IsNullOrWhiteSpace(Product.Id) && ProductUpdated.HasDelegate)
         {
             try
             {

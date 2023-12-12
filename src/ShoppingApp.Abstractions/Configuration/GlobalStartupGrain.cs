@@ -1,6 +1,4 @@
-﻿using Orleans;
-
-namespace ShoppingApp.Abstractions.Configuration;
+﻿namespace ShoppingApp.Abstractions.Configuration;
 
 public interface IGlobalStartupGrain : IGrainWithStringKey
 {

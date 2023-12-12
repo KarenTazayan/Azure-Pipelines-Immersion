@@ -1,23 +1,17 @@
-﻿using Orleans;
-using ShoppingApp.WebUI.Extensions;
+﻿using ShoppingApp.WebUI.Extensions;
 
 namespace ShoppingApp.WebUI.Services;
 
-public class BaseClusterService
+public class BaseClusterService(IHttpContextAccessor httpContextAccessor, IClusterClient client)
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    protected readonly IClusterClient Client;
-
-    public BaseClusterService(
-        IHttpContextAccessor httpContextAccessor, IClusterClient client) =>
-        (_httpContextAccessor, Client) = (httpContextAccessor, client);
+	protected readonly IClusterClient Client = client;
 
     protected T TryUseGrain<TGrainInterface, T>(
         Func<TGrainInterface, T> useGrain, Func<T> defaultValue)
         where TGrainInterface : IGrainWithStringKey =>
          TryUseGrain(
              useGrain,
-             _httpContextAccessor.TryGetUserId(),
+             httpContextAccessor.TryGetUserId(),
              defaultValue);
 
     protected T TryUseGrain<TGrainInterface, T>(

@@ -1,17 +1,11 @@
-﻿using Orleans;
-using ShoppingApp.Abstractions;
+﻿using ShoppingApp.Abstractions;
 
 namespace ShoppingApp.WebUI.Services;
 
-public sealed class InventoryService : BaseClusterService
+public sealed class InventoryService(IHttpContextAccessor httpContextAccessor, IClusterClient client)
+	: BaseClusterService(httpContextAccessor, client)
 {
-    public InventoryService(
-        IHttpContextAccessor httpContextAccessor, IClusterClient client) :
-        base(httpContextAccessor, client)
-    {
-    }
-
-    public async Task<HashSet<ProductDetails>> GetAllProductsAsync()
+	public async Task<HashSet<ProductDetails>> GetAllProductsAsync()
     {
         var getAllProductsTasks = Enum.GetValues<ProductCategory>()
             .Select(category =>
@@ -21,6 +15,6 @@ public sealed class InventoryService : BaseClusterService
 
         var allProducts = await Task.WhenAll(getAllProductsTasks);
 
-        return new HashSet<ProductDetails>(allProducts.SelectMany(products => products));
+        return [..allProducts.SelectMany(products => products)];
     }
 }

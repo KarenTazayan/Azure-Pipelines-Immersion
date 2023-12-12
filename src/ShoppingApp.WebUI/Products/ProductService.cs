@@ -3,15 +3,10 @@ using ShoppingApp.WebUI.Services;
 
 namespace ShoppingApp.WebUI.Products;
 
-public sealed class ProductService : BaseClusterService
+public sealed class ProductService(IHttpContextAccessor httpContextAccessor, IClusterClient client)
+	: BaseClusterService(httpContextAccessor, client)
 {
-    public ProductService(
-        IHttpContextAccessor httpContextAccessor, IClusterClient client) :
-        base(httpContextAccessor, client)
-    {
-    }
-
-    public Task CreateOrUpdateProductAsync(ProductDetails product) =>
+	public Task CreateOrUpdateProductAsync(ProductDetails product) =>
         Client.GetGrain<IProductGrain>(product.Id).CreateOrUpdateProductAsync(product);
 
     public Task<(bool IsAvailable, ProductDetails? ProductDetails)> TryTakeProductAsync(

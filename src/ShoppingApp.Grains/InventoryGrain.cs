@@ -7,50 +7,47 @@ namespace ShoppingApp.Grains;
 
 [Reentrant]
 [UsedImplicitly]
-public sealed class InventoryGrain : Grain, IInventoryGrain
+public sealed class InventoryGrain(
+	[PersistentState(stateName: "Inventory", storageName: PersistentStorageConfig.AzureStorageName)]
+	IPersistentState<HashSet<string>> state) : Grain, IInventoryGrain
 {
-    private readonly IPersistentState<HashSet<string>> _productIds;
-    private readonly Dictionary<string, ProductDetails> _productCache = new();
-
-    public InventoryGrain(
-        [PersistentState(stateName: "Inventory", storageName: PersistentStorageConfig.AzureStorageName)]
-        IPersistentState<HashSet<string>> state) => _productIds = state;
+	private readonly Dictionary<string, ProductDetails> _productCache = [];
 
     public override Task OnActivateAsync(CancellationToken cancellationToken) => PopulateProductCacheAsync();
 
     Task<HashSet<ProductDetails>> IInventoryGrain.GetAllProductsAsync() =>
         Task.FromResult(_productCache.Values.ToHashSet());
 
-    async Task IInventoryGrain.AddOrUpdateProductAsync(ProductDetails product)
+    Task IInventoryGrain.AddOrUpdateProductAsync(ProductDetails product)
     {
-        _productIds.State.Add(product.Id);
+        state.State.Add(product.Id);
         _productCache[product.Id] = product;
 
-        await _productIds.WriteStateAsync();
+        return state.WriteStateAsync();
     }
 
-    public async Task RemoveProductAsync(string productId)
+    public Task RemoveProductAsync(string productId)
     {
-        _productIds.State.Remove(productId);
+        state.State.Remove(productId);
         _productCache.Remove(productId);
 
-        await _productIds.WriteStateAsync();
+        return state.WriteStateAsync();
     }
 
-    private async Task PopulateProductCacheAsync()
+    private Task PopulateProductCacheAsync()
     {
-        if (_productIds is not { State.Count: > 0 })
+	    if (state is not { State.Count: > 0 })
         {
-            return;
+            return Task.CompletedTask;
         }
-        
-        await Parallel.ForEachAsync(
-            _productIds.State, // Explicitly use the current task-scheduler.
-            new ParallelOptions { TaskScheduler = TaskScheduler.Current },
-            async (id, _) =>
-            {
-                var productGrain = GrainFactory.GetGrain<IProductGrain>(id);
-                _productCache[id] = await productGrain.GetProductDetailsAsync();
-            });
+
+	    return Parallel.ForEachAsync(
+		    state.State, // Explicitly use the current task-scheduler.
+		    new ParallelOptions { TaskScheduler = TaskScheduler.Current },
+		    async (id, _) =>
+		    {
+			    var productGrain = GrainFactory.GetGrain<IProductGrain>(id);
+			    _productCache[id] = await productGrain.GetProductDetailsAsync();
+		    });
     }
 }

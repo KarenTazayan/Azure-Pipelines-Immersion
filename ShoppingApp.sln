@@ -33,7 +33,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShoppingApp.LoadTests", "Sh
 		test\ShoppingApp.LoadTests\ShoppingApp.WebUI.DefaultTests.yaml = test\ShoppingApp.LoadTests\ShoppingApp.WebUI.DefaultTests.yaml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingApp.WebUI", "src\ShoppingApp.WebUI\ShoppingApp.WebUI.csproj", "{BDE6B2BB-44A9-4581-B57C-79F9B1C4B842}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingApp.WebUI", "src\ShoppingApp.WebUI\ShoppingApp.WebUI.csproj", "{BDE6B2BB-44A9-4581-B57C-79F9B1C4B842}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ShoppingApp.Tests.FSharp", "test\ShoppingApp.Tests.FSharp\ShoppingApp.Tests.FSharp.fsproj", "{9189FE31-7F62-42B0-BCE6-84140513C0C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{BDE6B2BB-44A9-4581-B57C-79F9B1C4B842}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDE6B2BB-44A9-4581-B57C-79F9B1C4B842}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDE6B2BB-44A9-4581-B57C-79F9B1C4B842}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9189FE31-7F62-42B0-BCE6-84140513C0C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9189FE31-7F62-42B0-BCE6-84140513C0C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9189FE31-7F62-42B0-BCE6-84140513C0C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9189FE31-7F62-42B0-BCE6-84140513C0C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,6 +89,7 @@ Global
 		{3B682674-6409-42D7-90E5-28D9CAEE883E} = {8FEF3816-05C8-4E65-A32B-AAD4FDF371EA}
 		{FD5CC0AB-E211-4C03-86A1-0BD0F625D578} = {8FEF3816-05C8-4E65-A32B-AAD4FDF371EA}
 		{BDE6B2BB-44A9-4581-B57C-79F9B1C4B842} = {FBF484D5-20C7-4567-BDA2-8B7DE8B3A6F0}
+		{9189FE31-7F62-42B0-BCE6-84140513C0C1} = {8FEF3816-05C8-4E65-A32B-AAD4FDF371EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D37FECF3-AB0B-4EBD-B448-EB1322C57A2F}

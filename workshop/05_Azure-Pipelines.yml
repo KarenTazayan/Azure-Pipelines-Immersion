@@ -29,4 +29,5 @@ stages:
           command: test
           projects: |
             test/ShoppingApp.Tests
+            test/ShoppingApp.Tests.FSharp
           publishTestResults: true

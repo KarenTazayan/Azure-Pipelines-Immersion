@@ -22,3 +22,8 @@ sudo docker login -u [user-name] --password-stdin [password]
 sudo docker tag [image id] [account or namespace]/azure-pipelines-agents-debian-10.13:19092023
 sudo docker push [account or namespace]/azure-pipelines-agents-debian-10.13:19092023
 ```
+### How to run container on WSL2?
+```
+sudo docker build -f src/ShoppingApp.WebUI/Dockerfile . -t webuilocal
+sudo docker run -p 8080:80 -t webuilocal
+```

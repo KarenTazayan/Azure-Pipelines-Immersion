@@ -29,8 +29,8 @@ stages:
       location: ${{ parameters.location }}
       templateFile: '$(Pipeline.Workspace)/infrastructure/solution-infrastructure.bicep'
       acrUrl: $[ stageDependencies.Provision_Azure_Container_Registry.Deploy_Azure_Container_Registry.outputs['t2.acrUrl'] ]
-      acrLogin: $[ stageDependencies.Provision_Azure_Container_Registry.Deploy_Azure_Container_Registry.outputs['t2.acrLogin'] ]
-      acrPassword: $[ stageDependencies.Provision_Azure_Container_Registry.Deploy_Azure_Container_Registry.outputs['t2.acrPassword'] ]
+      acrName: $[ stageDependencies.Provision_Azure_Container_Registry.Deploy_Azure_Container_Registry.outputs['t2.acrName'] ]
+      acrResourceGroupName: $[ stageDependencies.Provision_Azure_Container_Registry.Deploy_Azure_Container_Registry.outputs['t2.acrResourceGroupName'] ]
   jobs:
   - deployment: Deploy_Infrastructure_${{ parameters.name }}
     displayName: Deploy ${{ parameters.name }} infrastructure in Azure
@@ -70,11 +70,11 @@ stages:
               scriptLocation: 'inlineScript'
               inlineScript: |
                 az --version
-                az group create --name $(resourceGroupName) --location $(location)
-                DEPLOYMENT_OUTPUT=$(az deployment group create --resource-group $(resourceGroupName) \
+                az group create --name $(resourceGroupName)-$(nameSuffix) --location $(location)
+                DEPLOYMENT_OUTPUT=$(az deployment group create --resource-group $(resourceGroupName)-$(nameSuffix) \
                   --template-file $(templateFile) --parameters nameSuffix='$(nameSuffix)' \
                   appNamePrefix='$(appNamePrefix)' semVer='$(GitVersion.SemVer)' sqlAdministratorPassword='Passw@rd1+' \
-                  acrUrl='$(acrUrl)' acrLogin='$(acrLogin)' acrPassword='$(acrPassword)' \
+                  acrName='$(acrName)' acrUrl='$(acrUrl)' acrResourceGroupName='$(acrResourceGroupName)' \
                   executorSecurityPrincipal=${servicePrincipalId} --query properties.outputs)
                 WEBUI_CA_URL=$(jq --raw-output '.webUiCaUrl.value' <<< $DEPLOYMENT_OUTPUT)
                 echo "##vso[task.setvariable variable=webUiCaUrl;isOutput=true]$WEBUI_CA_URL"

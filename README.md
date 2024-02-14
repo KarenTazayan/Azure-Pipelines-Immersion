@@ -18,7 +18,7 @@ Install [Docker Desktop](https://docs.docker.com/desktop/install/windows-install
 
 >Attention! The next steps below (till section 3) are optional.
 
-If you are using Windows 11 or Windows 10 it is more appropriate to use WSL 2 and install Docker Desktop on Ubuntu-20.04.
+If you are using Windows 11 or Windows 10 it is more appropriate to use WSL 2 and install Docker Desktop on Ubuntu-22.04.
 
 What are required for this?  
 > - Microsoft Azure Subscription, [you can create a free account](https://azure.microsoft.com/en-us/free/) if you don't have any.
@@ -26,19 +26,20 @@ What are required for this?
 >   - Windows Server 2016/Windows 10 or greater for Intel processor with VT-x
 >   - Windows Server 2022/Windows 11 or greater AMD EPYC/Ryzen processor
 
-Open terminal enable WSL 2 and install Ubuntu-20.04 with the following command. 
+Open terminal enable WSL 2 and install Ubuntu-22.04 with the following command 
 ```
-wsl --install -d Ubuntu-20.04
+wsl --install -d Ubuntu-22.04
 ```
 Install [Docker Engine](https://docs.docker.com/engine/install/ubuntu/) on Ubuntu.
 ```
 $ sudo apt-get update
-$ sudo apt-get install ca-certificates curl gnupg
-$ sudo mkdir -m 0755 -p /etc/apt/keyrings
-$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+$ sudo apt-get install ca-certificates curl
+$ sudo install -m 0755 -d /etc/apt/keyrings
+$ sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+$ sudo chmod a+r /etc/apt/keyrings/docker.asc
 $ echo \
-  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 $ sudo apt-get update
 $ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
@@ -54,25 +55,25 @@ mkdir C:\Repos
 cd C:\Repos
 git clone https://dev.azure.com/azure-pipelines-immersion-1/_git/ShoppingApp
 ```
-and interop with it from Ubuntu-20.04 by the following way:
+and interop with it from Ubuntu-22.04 by the following way:
 ```
 $ cd /mnt/c/Repos/ShoppingApp/build/azure-pipelines-agents/debian-12.2/
-$ sudo docker build -t azure-pipelines-agents-debian-12.2:23012024 .
+$ sudo docker build -t azure-pipelines-agents-debian-12.2:14022024 .
 ```
 
 ### 3. Create a self-hosted agents pool for the Azure DevOps organization.
 
 Build an agent docker image by using files from "build\azure-pipelines-agents" based on Debian image
 ```
-docker build -t azure-pipelines-agents-debian-12.2:23012024 .
+docker build -t azure-pipelines-agents-debian-12.2:14022024 .
 ```
 or on Ubuntu image.
 ```
-docker build -t azure-pipelines-agents-debian-12.2:23012024 .
+docker build -t azure-pipelines-agents-debian-12.2:14022024 .
 ```
 Also create Playwright image
 ```
-docker build -t azure-pipelines-agents-playwright-1.41.0:23012024 .
+docker build -t azure-pipelines-agents-playwright-1.41.0:14022024 .
 ```
 Create [Azure DevOps personal access token (PAT token)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate). For the scope select: Agent Pools (read, manage), Deployment group (read, manage).  
 Run Debian or Ubuntu based Azure Pipelines agent by using the following command:
@@ -80,7 +81,7 @@ Run Debian or Ubuntu based Azure Pipelines agent by using the following command:
 docker run -v /var/run/docker.sock:/var/run/docker.sock \
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
     -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_debian-12.2 \
-    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_debian-12.2 azure-pipelines-agents-debian-12.2:23012024
+    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_debian-12.2 azure-pipelines-agents-debian-12.2:14022024
 ```
 The syntax above uses PowerShell. If you use Bash shell, just replace "`" (backtick) with "\\" (backslash).  
   

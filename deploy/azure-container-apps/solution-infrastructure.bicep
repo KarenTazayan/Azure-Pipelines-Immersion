@@ -387,8 +387,8 @@ resource webUiCa 'Microsoft.App/containerApps@2022-10-01' = {
           image: '${acrUrl}/shoppingapp/webui:${semVer}'
           name: 'web-ui'
           resources: {
-            cpu: json('2')
-            memory: '4Gi'
+            cpu: json('1')
+            memory: '2Gi'
           }
           env: [
             {

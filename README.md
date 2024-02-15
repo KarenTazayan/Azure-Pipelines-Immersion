@@ -65,25 +65,25 @@ $ sudo docker build -t azure-pipelines-agents-debian-12.2:14022024 .
 
 Build an agent docker image by using files from "build\azure-pipelines-agents" based on Debian image
 ```
-docker build -t azure-pipelines-agents-debian-12.2:14022024 .
+sudo docker build -t azure-pipelines-agents-debian-12.2:14022024 .
 ```
 or on Ubuntu image.
 ```
-docker build -t azure-pipelines-agents-debian-12.2:14022024 .
+sudo docker build -t azure-pipelines-agents-ubuntu-20.04:14022024 .
 ```
 Also create Playwright image
 ```
-docker build -t azure-pipelines-agents-playwright-1.41.0:14022024 .
+sudo docker build -t azure-pipelines-agents-playwright-1.41.0:14022024 .
 ```
 Create [Azure DevOps personal access token (PAT token)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate). For the scope select: Agent Pools (read, manage), Deployment group (read, manage).  
 Run Debian or Ubuntu based Azure Pipelines agent by using the following command:
 ```
-docker run -v /var/run/docker.sock:/var/run/docker.sock \
+sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
     -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_debian-12.2 \
     -e AZP_POOL=Default -e AZP_WORK=_work --name 01_debian-12.2 azure-pipelines-agents-debian-12.2:14022024
 ```
-The syntax above uses PowerShell. If you use Bash shell, just replace "`" (backtick) with "\\" (backslash).  
+The syntax above uses Bash. If you use PowerShell shell, just replace "\\" (backslash) with "`" (backtick).  
   
 >Warning! Doing Docker within a Docker by using Docker socket has serious security implications. The code inside the container can now run as root on your Docker host. Please be very careful.
 

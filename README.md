@@ -1,7 +1,9 @@
 ## Azure Pipelines Immersion
 
-This guidline provide detailed steps to orgnize fully automated
-Azure Pipelines for the sample solution based on Blazor Server model which works on .NET 8 and Microsoft Orleans 8. It mostly uses the following services: Azure Container Apps, Azure SignalR Service, Azure Key Vault, Azure Storage Account, Azure Application Insights, Azure Load Testing, Azure DevOps and many more.
+This guideline provides detailed steps to organize fully automated Azure Pipelines for a sample solution based on the Blazor Server model, which operates on .NET 8 and Microsoft Orleans 8. It predominantly utilizes the following services: Azure Container Apps, Azure SignalR Service, Azure Key Vault, Azure Storage Account, Azure Application Insights, Azure Load Testing, Azure DevOps, and many more.
+
+What is required for this solution?  
+> - Microsoft Azure Subscription, [you can create a free account](https://azure.microsoft.com/en-us/free/) if you don't have any.
 
 ### 1. Create an Azure DevOps project for the solution.
 
@@ -16,17 +18,19 @@ Azure Pipelines for the sample solution based on Blazor Server model which works
 
 Install [Docker Desktop](https://docs.docker.com/desktop/install/windows-install/) on operation system which you are using.  
 
->Attention! The next steps below (till section 3) are optional.
+>Attention! The steps outlined below, up to section 3, are optional
 
-If you are using Windows 11 or Windows 10 it is more appropriate to use WSL 2 and install Docker Desktop on Ubuntu-22.04.
+If you are using Windows 11 or Windows 10 it is more appropriate to use WSL 2 and install Docker Desktop on Ubuntu-22.04. Here 
+we have two options:
 
-What are required for this?  
-> - Microsoft Azure Subscription, [you can create a free account](https://azure.microsoft.com/en-us/free/) if you don't have any.
+- The first option is to use WSL 2 on the host operationg system.
+- The second option is to keep the host operating system clean and create a Windows 10/11 Virtual Machine with Hyper-V using [Nested Virtualization](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/user-guide/nested-virtualization). What are required for *Nested Virtualization*?  
 > - [Windows machine with virtualization technology (AMD-V / Intel VT-x)](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/user-guide/nested-virtualization)
 >   - Windows Server 2016/Windows 10 or greater for Intel processor with VT-x
 >   - Windows Server 2022/Windows 11 or greater AMD EPYC/Ryzen processor
+> - Enable [nested virtualization](https://learn.microsoft.com/en-us/windows/wsl/faq#can-i-run-wsl-2-in-a-virtual-machine-) on the Virtual Machine
 
-Open terminal enable WSL 2 and install Ubuntu-22.04 with the following command 
+Regardless of the option you chose above, you need to open a terminal on the host (for the first option) or on the VM (for the second option). Then enable WSL 2 and install Ubuntu 22.04 with the following command, typing it in the terminal window:
 ```
 wsl --install -d Ubuntu-22.04
 ```
@@ -58,30 +62,30 @@ git clone https://dev.azure.com/azure-pipelines-immersion-1/_git/ShoppingApp
 and interop with it from Ubuntu-22.04 by the following way:
 ```
 $ cd /mnt/c/Repos/ShoppingApp/build/azure-pipelines-agents/debian-12.2/
-$ sudo docker build -t azure-pipelines-agents-debian-12.2:14022024 .
+$ sudo docker build -t azure-pipelines-agents-debian-12.2:04032024 .
 ```
 
 ### 3. Create a self-hosted agents pool for the Azure DevOps organization.
 
 Build an agent docker image by using files from "build\azure-pipelines-agents" based on Debian image
 ```
-sudo docker build -t azure-pipelines-agents-debian-12.2:14022024 .
+docker build -t azure-pipelines-agents-debian-12.2:04032024 .
 ```
 or on Ubuntu image.
 ```
-sudo docker build -t azure-pipelines-agents-ubuntu-20.04:14022024 .
+docker build -t azure-pipelines-agents-ubuntu-20.04:04032024 .
 ```
 Also create Playwright image
 ```
-sudo docker build -t azure-pipelines-agents-playwright-1.41.0:14022024 .
+docker build -t azure-pipelines-agents-playwright-1.41.0:04032024 .
 ```
 Create [Azure DevOps personal access token (PAT token)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate). For the scope select: Agent Pools (read, manage), Deployment group (read, manage).  
 Run Debian or Ubuntu based Azure Pipelines agent by using the following command:
 ```
-sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
     -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_debian-12.2 \
-    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_debian-12.2 azure-pipelines-agents-debian-12.2:14022024
+    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_debian-12.2 azure-pipelines-agents-debian-12.2:04032024
 ```
 The syntax above uses Bash. If you use PowerShell shell, just replace "\\" (backslash) with "`" (backtick).  
   

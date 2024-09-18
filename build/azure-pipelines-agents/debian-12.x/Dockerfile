@@ -1,4 +1,4 @@
-FROM debian:12.2-slim
+FROM debian:12.7-slim
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
@@ -21,6 +21,12 @@ WORKDIR /azcli
 COPY ./az_cli_install.sh .
 RUN chmod +x az_cli_install.sh
 RUN ./az_cli_install.sh
+# Fetch the latest Bicep CLI binary
+RUN curl -Lo bicep https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64
+# Mark it as executable
+RUN chmod +x ./bicep
+# Add bicep to your PATH (requires admin)
+RUN mv ./bicep /usr/local/bin/bicep
 ENV AZURE_CLI=True
 
 # Install the .NET SDK 8.0
@@ -31,8 +37,8 @@ RUN rm packages-microsoft-prod.deb
 RUN apt-get update && apt-get install -y dotnet-sdk-8.0
 
 # https://blog.jetbrains.com/dotnet/2020/07/16/resharper-command-line-tools-cross-platform-and-global-tools/#usage-as-global-tools
-RUN dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path /resharpercli --version 2024.1.4
-ENV JETBRAINS_RESHARPER_GLOBALTOOLS=2024.1.4
+RUN dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path /resharpercli --version 2024.2.4
+ENV JETBRAINS_RESHARPER_GLOBALTOOLS=2024.2.4
 
 # Install PowerShell
 RUN apt-get install -y powershell

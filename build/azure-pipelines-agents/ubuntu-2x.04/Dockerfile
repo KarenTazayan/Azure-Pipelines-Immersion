@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
@@ -21,20 +21,33 @@ COPY ./az_cli_install.sh .
 RUN chmod +x az_cli_install.sh
 RUN ./az_cli_install.sh
 ENV AZURE_CLI=True
+# Fetch the latest Bicep CLI binary
+RUN curl -Lo bicep https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64
+# Mark it as executable
+RUN chmod +x ./bicep
+# Add bicep to your PATH (requires admin)
+RUN mv ./bicep /usr/local/bin/bicep
 
-# Install the .NET SDK 8.0
+# Install the .NET SDK 9.0
 RUN apt-get install wget
 RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 RUN dpkg -i packages-microsoft-prod.deb
 RUN rm packages-microsoft-prod.deb
-RUN apt-get update && apt-get install -y dotnet-sdk-8.0
+RUN apt-get update && apt-get install -y dotnet-sdk-9.0
 
 # https://blog.jetbrains.com/dotnet/2020/07/16/resharper-command-line-tools-cross-platform-and-global-tools/#usage-as-global-tools
-RUN dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path /resharpercli --version 2024.2.4
-ENV JETBRAINS_RESHARPER_GLOBALTOOLS=2024.2.4
+RUN dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path /resharpercli --version 2024.3.0
+ENV JETBRAINS_RESHARPER_GLOBALTOOLS=2024.3.0
 
 # Install PowerShell
-RUN apt-get install -y powershell
+# Download the PowerShell package file
+RUN wget https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/powershell_7.4.6-1.deb_amd64.deb
+# Install the PowerShell package
+RUN dpkg -i powershell_7.4.6-1.deb_amd64.deb
+# Resolve missing dependencies and finish the install (if necessary)
+RUN apt-get install -f
+# Delete the downloaded package file
+RUN rm powershell_7.4.6-1.deb_amd64.deb
 
 # Install Docker Engine on Debian
 # Use Docker within a Docker container

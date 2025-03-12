@@ -5,6 +5,10 @@
 # For the scope select: Agent Pools (read, manage), Deployment group (read, manage).
 # qgc74oyl4fgjmlsvtqitvehplqbj2xzucbecvoos6wvry5gkeqsa
 
+# If you experience DNS resolution issues on an Azure Pipelines Agent,
+# especially with the Azure Load Testing Service,
+# try starting the container with Google's default DNS (8.8.8.8).
+
 # Bash Syntax
 # Warning! Doing Docker within a Docker by using Docker socket has 
 # serious security implications. The code inside the container can 

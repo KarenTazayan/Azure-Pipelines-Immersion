@@ -109,4 +109,6 @@ Disable [shallow fetch](https://learn.microsoft.com/en-us/azure/devops/pipelines
 
 ### 5. Run the Azure Pipeline.
 
+>Warning! If you experience DNS resolution issues on an Azure Pipelines Agent, especially with the Azure Load Testing Service, try starting the container with Google's default DNS (8.8.8.8).
+
 Run the Azure Pipeline, wait till it completely deploy the solution and enjoy it.

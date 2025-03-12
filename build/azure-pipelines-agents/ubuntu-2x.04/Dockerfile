@@ -40,14 +40,7 @@ RUN dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path /resharpercl
 ENV JETBRAINS_RESHARPER_GLOBALTOOLS=2024.3.6
 
 # Install PowerShell
-# Download the PowerShell package file
-RUN wget https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/powershell_7.4.6-1.deb_amd64.deb
-# Install the PowerShell package
-RUN dpkg -i powershell_7.4.6-1.deb_amd64.deb
-# Resolve missing dependencies and finish the install (if necessary)
-RUN apt-get install -f
-# Delete the downloaded package file
-RUN rm powershell_7.4.6-1.deb_amd64.deb
+RUN apt-get install -y powershell
 
 # Install Docker Engine on Debian
 # Use Docker within a Docker container
@@ -66,5 +59,13 @@ WORKDIR /azp
 # Run a self-hosted Azure Pipelines agent in Docker
 COPY ./start.sh .
 RUN chmod +x start.sh
+
+# Create agent user and set up home directory
+RUN useradd -m -d /home/agent agent
+RUN chown -R agent:agent /azp /home/agent
+
+USER agent
+# Another option is to run the agent as root.
+# ENV AGENT_ALLOW_RUNASROOT="true"
 
 ENTRYPOINT [ "./start.sh" ]

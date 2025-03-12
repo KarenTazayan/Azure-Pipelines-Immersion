@@ -68,12 +68,14 @@ WORKDIR /azp
 COPY ./start.sh .
 RUN chmod +x start.sh
 
-# Create agent user and set up home directory
-RUN useradd -m -d /home/agent agent
-RUN chown -R agent:agent /azp /home/agent
+# Skip creating a restricted user for running Docker in Docker.
+# Warning! Doing Docker within a Docker by using Docker socket has serious security implications. 
+# The code inside the container can now run as root on your Docker host. Please be very careful.
 
-USER agent
-# Another option is to run the agent as root.
-# ENV AGENT_ALLOW_RUNASROOT="true"
+ENV AGENT_ALLOW_RUNASROOT="true"
+
+# Create agent user and set up home directory
+# RUN useradd -m -d /home/agent agent
+# RUN chown -R agent:agent /azp /home/agent
 
 ENTRYPOINT [ "./start.sh" ]

@@ -30,9 +30,9 @@ we have two options:
 >   - Windows Server 2022/Windows 11 or greater AMD EPYC/Ryzen processor
 > - Enable [nested virtualization](https://learn.microsoft.com/en-us/windows/wsl/faq#can-i-run-wsl-2-in-a-virtual-machine-) on the Virtual Machine
 
-Regardless of the option you chose above, you need to open a terminal on the host (for the first option) or on the VM (for the second option). Then enable WSL 2 and install Ubuntu 22.04 with the following command, typing it in the terminal window:
+Regardless of the option you chose above, you need to open a terminal on the host (for the first option) or on the VM (for the second option). Then enable WSL 2 and install Ubuntu 24.04 with the following command, typing it in the terminal window:
 ```
-wsl --install -d Ubuntu-22.04
+wsl --install -d Ubuntu-24.04 --name AZP_Ubuntu-24.04
 ```
 Install [Docker Engine](https://docs.docker.com/engine/install/ubuntu/) on Ubuntu.
 ```
@@ -62,22 +62,22 @@ git clone https://dev.azure.com/azure-pipelines-immersion-1/_git/ShoppingApp
 and interop with it from Ubuntu-22.04 by the following way:
 ```
 $ cd /mnt/c/Repos/ShoppingApp/build/azure-pipelines-agents/debian-12.x/
-$ sudo docker build -t azure-pipelines-agents-debian-12.7:11032025 .
+$ sudo docker build -t azure-pipelines-agents-debian-12.7:15052025 .
 ```
 
 ### 3. Create a self-hosted agents pool for the Azure DevOps organization.
 
 Build an agent docker image by using files from "build\azure-pipelines-agents" based on Debian image
 ```
-docker build -t azure-pipelines-agents-debian-12.7:11032025 .
+docker build -t azure-pipelines-agents-debian-12.7:15052025 .
 ```
 or on Ubuntu image.
 ```
-docker build -t azure-pipelines-agents-ubuntu-24.04:11032025 .
+docker build -t azure-pipelines-agents-ubuntu-24.04:15052025 .
 ```
 Also create Playwright image
 ```
-docker build -t azure-pipelines-agents-playwright-1.x:1.50.0.11032025 .
+docker build -t azure-pipelines-agents-playwright-1.x:1.52.0.15052025 .
 ```
 Create [Azure DevOps personal access token (PAT token)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate). For the scope select: Agent Pools (read, manage), Deployment group (read, manage).  
 Run Debian or Ubuntu based Azure Pipelines agent by using the following command:
@@ -85,7 +85,7 @@ Run Debian or Ubuntu based Azure Pipelines agent by using the following command:
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
     -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_debian-12.7 \
-    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_debian-12.7 azure-pipelines-agents-debian-12.7:11032025
+    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_debian-12.7 azure-pipelines-agents-debian-12.7:15052025
 ```
 The syntax above uses Bash. If you use PowerShell shell, just replace "\\" (backslash) with "`" (backtick).  
   

@@ -294,7 +294,7 @@ resource siloHostCa 'Microsoft.App/containerApps@2022-10-01' = {
   properties: {
     managedEnvironmentId: shoppingAppCae.id
     configuration: {
-      activeRevisionsMode: 'Multiple'
+      activeRevisionsMode: 'Single'
       secrets: [
         {
           name: 'acr-password'
@@ -387,8 +387,8 @@ resource webUiCa 'Microsoft.App/containerApps@2022-10-01' = {
           image: '${acrUrl}/shoppingapp/webui:${semVer}'
           name: 'web-ui'
           resources: {
-            cpu: json('1')
-            memory: '2Gi'
+            cpu: json('0.5')
+            memory: '1Gi'
           }
           env: [
             {
@@ -415,7 +415,7 @@ resource webUiCa 'Microsoft.App/containerApps@2022-10-01' = {
         }
       ]
       scale: {
-        minReplicas: 1
+        minReplicas: 0
         maxReplicas: 2
         rules: [
           {

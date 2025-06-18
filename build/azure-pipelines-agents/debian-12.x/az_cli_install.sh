@@ -99,7 +99,7 @@ Signed-by: /etc/apt/keyrings/microsoft.gpg" | tee /etc/apt/sources.list.d/azure-
     set +v
 
     assert_consent "Install the Azure CLI?" ${global_consent}
-    apt-get install -y azure-cli=2.72.0-1~$CLI_REPO
+    apt-get install -y azure-cli=2.74.0-1~$CLI_REPO
 
 }
 

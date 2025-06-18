@@ -20,7 +20,7 @@ Install [Docker Desktop](https://docs.docker.com/desktop/install/windows-install
 
 >Attention! The steps outlined below, up to section 3, are optional
 
-If you are using Windows 11 or Windows 10 it is more appropriate to use WSL 2 and install Docker Desktop on Ubuntu-22.04. Here 
+If you are using Windows 11 or Windows 10 it is more appropriate to use WSL 2 and install Docker Desktop on Ubuntu-24.04. Here 
 we have two options:
 
 - The first option is to use WSL 2 on the host operationg system.
@@ -59,33 +59,33 @@ mkdir C:\Repos
 cd C:\Repos
 git clone https://dev.azure.com/azure-pipelines-immersion-1/_git/ShoppingApp
 ```
-and interop with it from Ubuntu-22.04 by the following way:
+and interop with it from Ubuntu-24.04 by the following way:
 ```
 $ cd /mnt/c/Repos/ShoppingApp/build/azure-pipelines-agents/debian-12.x/
-$ sudo docker build -t azure-pipelines-agents-debian-12.7:15052025 .
+$ sudo docker build -t azure-pipelines-agents-debian-12.11:18062025 .
 ```
 
 ### 3. Create a self-hosted agents pool for the Azure DevOps organization.
 
 Build an agent docker image by using files from "build\azure-pipelines-agents" based on Debian image
 ```
-docker build -t azure-pipelines-agents-debian-12.7:15052025 .
+docker build -t azure-pipelines-agents-debian-12.11:18062025 .
 ```
 or on Ubuntu image.
 ```
-docker build -t azure-pipelines-agents-ubuntu-24.04:15052025 .
+docker build -t azure-pipelines-agents-ubuntu-24.04:18062025 .
 ```
 Also create Playwright image
 ```
-docker build -t azure-pipelines-agents-playwright-1.x:1.52.0.15052025 .
+docker build -t azure-pipelines-agents-playwright-1.x:1.52.0.18062025 .
 ```
 Create [Azure DevOps personal access token (PAT token)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate). For the scope select: Agent Pools (read, manage), Deployment group (read, manage).  
 Run Debian or Ubuntu based Azure Pipelines agent by using the following command:
 ```
-docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
-    -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_debian-12.7 \
-    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_debian-12.7 azure-pipelines-agents-debian-12.7:15052025
+    -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Debian-12.11 \
+    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-12.11 azure-pipelines-agents-debian-12.11:18062025
 ```
 The syntax above uses Bash. If you use PowerShell shell, just replace "\\" (backslash) with "`" (backtick).  
   

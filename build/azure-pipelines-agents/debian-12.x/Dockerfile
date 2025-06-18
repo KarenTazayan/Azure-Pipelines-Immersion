@@ -1,4 +1,4 @@
-FROM debian:12.7-slim
+FROM debian:12.11-slim
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
@@ -31,14 +31,14 @@ ENV AZURE_CLI=True
 
 # Install the .NET SDK 9.0
 RUN apt-get install wget
-RUN wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+RUN wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 RUN dpkg -i packages-microsoft-prod.deb
 RUN rm packages-microsoft-prod.deb
 RUN apt-get update && apt-get install -y dotnet-sdk-9.0
 
 # https://blog.jetbrains.com/dotnet/2020/07/16/resharper-command-line-tools-cross-platform-and-global-tools/#usage-as-global-tools
-RUN dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path /resharpercli --version 2025.1.2
-ENV JETBRAINS_RESHARPER_GLOBALTOOLS=2025.1.2
+RUN dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path /resharpercli --version 2025.1.3
+ENV JETBRAINS_RESHARPER_GLOBALTOOLS=2025.1.3
 
 # Install PowerShell
 RUN apt-get install -y powershell

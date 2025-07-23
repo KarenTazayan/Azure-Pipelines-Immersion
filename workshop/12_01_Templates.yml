@@ -138,18 +138,26 @@ stages:
   - job: Push_Containers_Images
     displayName: Push container images
     steps:
+    - checkout: self
+      fetchDepth: 0
     # Version with GitVersion
-    - task: gitversion/setup@3.0.3
+    - task: gitversion-setup@4
       displayName: Install GitVersion
       inputs:
-        versionSpec: '6.0.x'
+        versionSpec: '6.3.x'
 
-    - task: gitversion/execute@3.0.3
+    - task: gitversion-execute@4
       displayName: Execute GitVersion
+      inputs:
+        configFilePath: 'GitVersion.yml'
+        updateAssemblyInfo: true
 
     # Print SemVer Number
-    - script: echo $(GitVersion.SemVer)
+    - script: |
+        echo "##vso[task.setvariable variable=GitVersionSemVer;isOutput=true]$(GitVersion_SemVer)"
+        echo $(GitVersion_SemVer)
       displayName: 'Print SemVer Number'
+      name: t1
 
     - task: AzureCLI@2
       displayName: 'Push ShoppingApp.SiloHost container image'
@@ -163,9 +171,9 @@ stages:
           az --version
           az acr login --name $(acrUrl)
           cd "$(Build.SourcesDirectory)"
-          docker build -t "$(acrUrl)/shoppingapp/silohost:$(GitVersion.SemVer)" -f src/ShoppingApp.SiloHost/Dockerfile . \
+          docker build -t "$(acrUrl)/shoppingapp/silohost:$(GitVersion_SemVer)" -f src/ShoppingApp.SiloHost/Dockerfile . \
             --build-arg assemblyInformationalVersion=$(GitVersion.InformationalVersion)
-          docker push "$(acrUrl)/shoppingapp/silohost:$(GitVersion.SemVer)"
+          docker push "$(acrUrl)/shoppingapp/silohost:$(GitVersion_SemVer)"
 
     - task: AzureCLI@2
       displayName: 'Push ShoppingApp.WebUI container image'
@@ -177,9 +185,9 @@ stages:
         inlineScript: |
           az acr login --name $(acrUrl)
           cd "$(Build.SourcesDirectory)"
-          docker build -t "$(acrUrl)/shoppingapp/webui:$(GitVersion.SemVer)" -f src/ShoppingApp.WebUI/Dockerfile . \
+          docker build -t "$(acrUrl)/shoppingapp/webui:$(GitVersion_SemVer)" -f src/ShoppingApp.WebUI/Dockerfile . \
             --build-arg assemblyInformationalVersion=$(GitVersion.InformationalVersion)
-          docker push "$(acrUrl)/shoppingapp/webui:$(GitVersion.SemVer)"
+          docker push "$(acrUrl)/shoppingapp/webui:$(GitVersion_SemVer)"
 
 ##################### Provision Infrastructure Stages #####################
 

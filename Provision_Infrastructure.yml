@@ -31,6 +31,7 @@ stages:
       acrUrl: $[ stageDependencies.Provision_Azure_Container_Registry.Deploy_Azure_Container_Registry.outputs['t2.acrUrl'] ]
       acrName: $[ stageDependencies.Provision_Azure_Container_Registry.Deploy_Azure_Container_Registry.outputs['t2.acrName'] ]
       acrResourceGroupName: $[ stageDependencies.Provision_Azure_Container_Registry.Deploy_Azure_Container_Registry.outputs['t2.acrResourceGroupName'] ]
+      gitVersionSemVer: $[ stageDependencies.Publishing_Solution_Artifacts_Stage.Push_Containers_Images.outputs['t1.GitVersionSemVer'] ]
   jobs:
   - deployment: Deploy_Infrastructure_${{ parameters.name }}
     displayName: Deploy ${{ parameters.name }} infrastructure in Azure
@@ -50,16 +51,7 @@ stages:
             inputs:
               artifact: 'infrastructure'
               path: $(Pipeline.Workspace)/infrastructure
-          
-          # Version with GitVersion
-          - task: gitversion/setup@3.0.3
-            displayName: Install GitVersion
-            inputs:
-              versionSpec: '6.x'
-
-          - task: gitversion/execute@3.0.3
-            displayName: Execute GitVersion
-
+        
           - task: AzureCLI@2
             displayName: 'Deploy the whole infrastructure to Azure'
             name: t1
@@ -73,7 +65,7 @@ stages:
                 az group create --name $(resourceGroupName) --location $(location)
                 DEPLOYMENT_OUTPUT=$(az deployment group create --resource-group $(resourceGroupName) \
                   --template-file $(templateFile) --parameters nameSuffix='$(nameSuffix)' \
-                  appNamePrefix='$(appNamePrefix)' semVer='$(GitVersion.SemVer)' sqlAdministratorPassword='Passw@rd1+' \
+                  appNamePrefix='$(appNamePrefix)' semVer='$(gitVersionSemVer)' sqlAdministratorPassword='Passw@rd1+' \
                   acrName='$(acrName)' acrUrl='$(acrUrl)' acrResourceGroupName='$(acrResourceGroupName)' \
                   executorSecurityPrincipal=${servicePrincipalId} --query properties.outputs)
                 WEBUI_CA_URL=$(jq --raw-output '.webUiCaUrl.value' <<< $DEPLOYMENT_OUTPUT)

@@ -16,10 +16,10 @@ stages:
         displayName: Whole solution build process
         steps:
         - task: DotNetCoreCLI@2
-          displayName: 'Build solution ShoppingApp.sln'
+          displayName: 'Build solution ShoppingApp.slnx'
           inputs:
             command: build
-            projects: 'ShoppingApp.sln'
+            projects: 'ShoppingApp.slnx'
             configuration: '$(buildConfiguration)'
   
         # Run Tests

@@ -16,7 +16,7 @@
 sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
     -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Ubuntu-24.04 \
-    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Ubuntu-24.04 azure-pipelines-agents-ubuntu-24.04:22072025
+    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Ubuntu-24.04 azure-pipelines-agents-ubuntu-24.04:18092025
 
 # Bash Syntax
 # Warning! Doing Docker within a Docker by using Docker socket has 
@@ -24,8 +24,8 @@ sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
 # now run as root on your Docker host. Please be very careful.
 sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
-    -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Debian-12.11 \
-    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-12.11 azure-pipelines-agents-debian-12.11:22072025
+    -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Debian-12.12 \
+    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-12.12 azure-pipelines-agents-debian-12.12:18092025
 
 # Bash Syntax
 # Warning! Doing Docker within a Docker by using Docker socket has 
@@ -33,5 +33,5 @@ sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
 # now run as root on your Docker host. Please be very careful.
 sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
-    -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Playwright-1.53.0 \
-    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Playwright-1.53.0 azure-pipelines-agents-playwright-1.x:1.53.0.22072025
+    -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Playwright-1.55.0 \
+    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Playwright-1.55.0 azure-pipelines-agents-playwright-1.x:1.55.0.18092025

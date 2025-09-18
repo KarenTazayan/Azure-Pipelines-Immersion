@@ -19,5 +19,5 @@ stages:
           displayName: 'Build solution ShoppingApp.sln'
           inputs:
             command: build
-            projects: 'ShoppingApp.sln'
+            projects: 'ShoppingApp.slnx'
             configuration: '$(buildConfiguration)'

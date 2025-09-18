@@ -1,5 +1,5 @@
 # The image is based on Ubuntu 24.04
-FROM mcr.microsoft.com/playwright/python:v1.53.0-noble
+FROM mcr.microsoft.com/playwright/python:v1.55.0-noble
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -y

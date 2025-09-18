@@ -62,30 +62,30 @@ git clone https://dev.azure.com/azure-pipelines-immersion-1/_git/ShoppingApp
 and interop with it from Ubuntu-24.04 by the following way:
 ```
 $ cd /mnt/c/Repos/ShoppingApp/build/azure-pipelines-agents/debian-12.x/
-$ sudo docker build -t azure-pipelines-agents-debian-12.11:22072025 .
+$ sudo docker build -t azure-pipelines-agents-debian-12.12:18092025 .
 ```
 
 ### 3. Create a self-hosted agents pool for the Azure DevOps organization.
 
 Build an agent docker image by using files from "build\azure-pipelines-agents" based on Debian image
 ```
-docker build -t azure-pipelines-agents-debian-12.11:22072025 .
+docker build -t azure-pipelines-agents-debian-12.12:18092025 .
 ```
 or on Ubuntu image.
 ```
-docker build -t azure-pipelines-agents-ubuntu-24.04:22072025 .
+docker build -t azure-pipelines-agents-ubuntu-24.04:18092025 .
 ```
 Also create Playwright image
 ```
-docker build -t azure-pipelines-agents-playwright-1.x:1.53.0.22072025 .
+docker build -t azure-pipelines-agents-playwright-1.x:1.55.0.18092025 .
 ```
 Create [Azure DevOps personal access token (PAT token)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate). For the scope select: Agent Pools (read, manage), Deployment group (read, manage).  
 Run Debian or Ubuntu based Azure Pipelines agent by using the following command:
 ```
 sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
-    -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Debian-12.11 \
-    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-12.11 azure-pipelines-agents-debian-12.11:22072025
+    -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Debian-12.12 \
+    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-12.12 azure-pipelines-agents-debian-12.12:18092025
 ```
 The syntax above uses Bash. If you use PowerShell shell, just replace "\\" (backslash) with "`" (backtick).  
   
@@ -113,8 +113,8 @@ Disable [shallow fetch](https://learn.microsoft.com/en-us/azure/devops/pipelines
 ```
 sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --dns=8.8.8.8 \
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
-    -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Debian-12.11 \
-    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-12.11 azure-pipelines-agents-debian-12.11:22072025
+    -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Debian-12.12 \
+    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-12.12 azure-pipelines-agents-debian-12.12:18092025
 ```
 
 Run the Azure Pipeline, wait till it completely deploy the solution and enjoy it.

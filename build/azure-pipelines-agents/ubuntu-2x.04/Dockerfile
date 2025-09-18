@@ -22,11 +22,9 @@ RUN chmod +x az_cli_install.sh
 RUN ./az_cli_install.sh
 ENV AZURE_CLI=True
 # Fetch the latest Bicep CLI binary
-RUN curl -Lo bicep https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64
-# Mark it as executable
-RUN chmod +x ./bicep
-# Add bicep to your PATH (requires admin)
-RUN mv ./bicep /usr/local/bin/bicep
+RUN curl -fL -o /usr/local/bin/bicep \
+  https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64 \
+  && chmod +x /usr/local/bin/bicep
 
 # Install the .NET SDK 9.0
 RUN apt-get install wget
@@ -36,8 +34,8 @@ RUN rm packages-microsoft-prod.deb
 RUN apt-get update && apt-get install -y dotnet-sdk-9.0
 
 # https://blog.jetbrains.com/dotnet/2020/07/16/resharper-command-line-tools-cross-platform-and-global-tools/#usage-as-global-tools
-RUN dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path /resharpercli --version 2025.1.4
-ENV JETBRAINS_RESHARPER_GLOBALTOOLS=2025.1.4
+RUN dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path /resharpercli --version 2025.2.1
+ENV JETBRAINS_RESHARPER_GLOBALTOOLS=2025.2.1
 
 # Install PowerShell
 RUN apt-get install -y powershell

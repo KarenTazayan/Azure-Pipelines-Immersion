@@ -82,7 +82,9 @@ docker build -t azure-pipelines-agents-playwright-1.x:1.55.0.18092025 .
 Create [Azure DevOps personal access token (PAT token)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate). For the scope select: Agent Pools (read, manage), Deployment group (read, manage).  
 Run Debian or Ubuntu based Azure Pipelines agent by using the following command:
 ```
+SOCKET_GID=$(stat -c '%g' /var/run/docker.sock)
 sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+    --group-add $SOCKET_GID \
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
     -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Debian-12.12 \
     -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-12.12 azure-pipelines-agents-debian-12.12:18092025
@@ -111,7 +113,9 @@ Disable [shallow fetch](https://learn.microsoft.com/en-us/azure/devops/pipelines
 
 >Warning! If you experience DNS resolution issues on an Azure Pipelines Agent, especially with the Azure Load Testing Service, try starting the container with Google's default DNS (8.8.8.8).
 ```
+SOCKET_GID=$(stat -c '%g' /var/run/docker.sock)
 sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --dns=8.8.8.8 \
+    --group-add $SOCKET_GID
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
     -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Debian-12.12 \
     -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-12.12 azure-pipelines-agents-debian-12.12:18092025

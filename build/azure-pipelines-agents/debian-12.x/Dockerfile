@@ -1,9 +1,10 @@
 FROM debian:12.12-slim
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
+ENV TARGETARCH=linux-x64
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
     apt-transport-https \
     apt-utils \
     ca-certificates \
@@ -15,24 +16,21 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommend
     lsb-release \
     software-properties-common
 
-# Install the Azure CLI
+# Install the Azure CLI and Bicep CLI`
 # RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 WORKDIR /azcli
 COPY ./az_cli_install.sh .
-RUN chmod +x az_cli_install.sh
-RUN ./az_cli_install.sh
+RUN chmod +x az_cli_install.sh && ./az_cli_install.sh && \
+    curl -fL -o /usr/local/bin/bicep https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64 && \
+    chmod +x /usr/local/bin/bicep
 ENV AZURE_CLI=True
-# Fetch the latest Bicep CLI binary
-RUN curl -fL -o /usr/local/bin/bicep \
-  https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64 \
-  && chmod +x /usr/local/bin/bicep
 
 # Install the .NET SDK 9.0
-RUN apt-get install wget
-RUN wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-RUN dpkg -i packages-microsoft-prod.deb
-RUN rm packages-microsoft-prod.deb
-RUN apt-get update && apt-get install -y dotnet-sdk-9.0
+RUN apt-get install wget && \
+    wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    rm packages-microsoft-prod.deb && \
+    apt-get update && apt-get install -y dotnet-sdk-9.0
 
 # https://blog.jetbrains.com/dotnet/2020/07/16/resharper-command-line-tools-cross-platform-and-global-tools/#usage-as-global-tools
 RUN dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path /resharpercli --version 2025.2.1
@@ -45,35 +43,32 @@ RUN apt-get install -y powershell
 # Use Docker within a Docker container
 # Warning!!! Doing this has serious security implications. 
 # The code inside the container can now run as root on your Docker host.
-RUN install -m 0755 -d /etc/apt/keyrings
-RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-RUN chmod a+r /etc/apt/keyrings/docker.gpg
+RUN install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+    chmod a+r /etc/apt/keyrings/docker.gpg && \
 # Add the repository to Apt sources:
-RUN echo \
+  echo \
   "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
   "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
   tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-RUN apt-get update
-RUN yes Y | apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-# Can be 'linux-x64', 'linux-arm64', 'linux-arm', 'rhel.6-x64'.
-ENV TARGETARCH=linux-x64
+RUN apt-get update && \
+    yes Y | apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 WORKDIR /azp
 
-# Run a self-hosted Azure Pipelines agent in Docker
 COPY ./start.sh .
 RUN chmod +x start.sh
 
-# Skip creating a restricted user for running Docker in Docker.
-# Warning! Doing Docker within a Docker by using Docker socket has serious security implications. 
-# The code inside the container can now run as root on your Docker host. Please be very careful.
+# Remove this line to enforce non-root execution
+# ENV AGENT_ALLOW_RUNASROOT="true"
 
-ENV AGENT_ALLOW_RUNASROOT="true"
+# Create u1 user and set up home directory
+RUN useradd -m -d /home/u1 u1 \
+    && chown -R u1:u1 /azp /home/u1 \
+    && groupadd -f docker \
+    && usermod -aG docker u1
 
-# Create agent user and set up home directory
-# RUN useradd -m -d /home/agent agent
-# RUN chown -R agent:agent /azp /home/agent
+USER u1
 
 ENTRYPOINT [ "./start.sh" ]

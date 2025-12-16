@@ -1,5 +1,5 @@
 # The image is based on Ubuntu 24.04
-FROM mcr.microsoft.com/playwright/python:v1.55.0-noble
+FROM mcr.microsoft.com/playwright/python:v1.57.0-noble
 
 ENV TARGETARCH=linux-x64
 ENV RUN_AGENT_ONCE=False
@@ -11,9 +11,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     curl git iputils-ping jq lsb-release openssh-client \
     software-properties-common
 
-# Install the .NET SDK 9.0
+# Install the .NET SDK 10.0
 RUN add-apt-repository ppa:dotnet/backports && \
-    apt-get update && apt-get install -y dotnet-sdk-9.0
+    apt-get update && apt-get install -y dotnet-sdk-10.0
 
 WORKDIR /azp
 

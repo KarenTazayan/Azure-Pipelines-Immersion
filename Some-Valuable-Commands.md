@@ -19,8 +19,8 @@ sudo docker login -u [user-name] --password-stdin [password]
 ```
 ### How to tag and push an image to Docker Hub?
 ```
-sudo docker tag [image id] [account or namespace]/azure-pipelines-agents-debian-12.12:18092025
-sudo docker push [account or namespace]/azure-pipelines-agents-debian-12.12:18092025
+sudo docker tag [image id] [account or namespace]/azure-pipelines-agents-debian-12.12:16122025
+sudo docker push [account or namespace]/azure-pipelines-agents-debian-12.12:16122025
 ```
 ### How to run container on WSL2?
 ```

@@ -172,7 +172,7 @@ stages:
           az acr login --name $(acrUrl)
           cd "$(Build.SourcesDirectory)"
           docker build -t "$(acrUrl)/shoppingapp/silohost:$(GitVersion_SemVer)" -f src/ShoppingApp.SiloHost/Dockerfile . \
-            --build-arg assemblyInformationalVersion=$(GitVersion.InformationalVersion)
+            --build-arg assemblyInformationalVersion=$(GitVersion_InformationalVersion)
           docker push "$(acrUrl)/shoppingapp/silohost:$(GitVersion_SemVer)"
 
     - task: AzureCLI@2
@@ -186,7 +186,7 @@ stages:
           az acr login --name $(acrUrl)
           cd "$(Build.SourcesDirectory)"
           docker build -t "$(acrUrl)/shoppingapp/webui:$(GitVersion_SemVer)" -f src/ShoppingApp.WebUI/Dockerfile . \
-            --build-arg assemblyInformationalVersion=$(GitVersion.InformationalVersion)
+            --build-arg assemblyInformationalVersion=$(GitVersion_InformationalVersion)
           docker push "$(acrUrl)/shoppingapp/webui:$(GitVersion_SemVer)"
 
 ##################### Provision Infrastructure Stages #####################

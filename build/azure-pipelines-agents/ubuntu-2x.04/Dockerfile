@@ -32,8 +32,8 @@ RUN apt-get install wget && \
     apt-get update && apt-get install -y dotnet-sdk-10.0
 
 # https://blog.jetbrains.com/dotnet/2020/07/16/resharper-command-line-tools-cross-platform-and-global-tools/#usage-as-global-tools
-RUN dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path /resharpercli --version 2025.3.0
-ENV JETBRAINS_RESHARPER_GLOBALTOOLS=2025.3.0
+RUN dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path /resharpercli --version 2025.3.2
+ENV JETBRAINS_RESHARPER_GLOBALTOOLS=2025.3.2
 
 # Install PowerShell
 RUN apt-get install -y powershell

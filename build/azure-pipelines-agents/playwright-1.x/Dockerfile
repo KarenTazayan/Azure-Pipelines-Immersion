@@ -1,5 +1,5 @@
 # The image is based on Ubuntu 24.04
-FROM mcr.microsoft.com/playwright/python:v1.57.0-noble
+FROM mcr.microsoft.com/playwright/python:v1.58.0-noble
 
 ENV TARGETARCH=linux-x64
 ENV RUN_AGENT_ONCE=False

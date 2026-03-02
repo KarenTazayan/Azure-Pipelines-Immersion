@@ -124,7 +124,7 @@ public partial class MainLayout : IDisposable
         
         if (navigationMethod == "HTML")
         {
-	        TelemetryClient.TrackPageView(e.Location);
+	        TelemetryClient.TrackEvent("PageView", new Dictionary<string, string> { ["page"] = e.Location });
         }
     }
 

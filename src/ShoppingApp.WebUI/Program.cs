@@ -1,6 +1,10 @@
 using Azure.Data.Tables;
-using Microsoft.ApplicationInsights.Extensibility;
 using MudBlazor.Services;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using ShoppingApp.Common;
+using System.Reflection;
 using Orleans.Configuration;
 using ShoppingApp.WebUI;
 using ShoppingApp.WebUI.Cart;
@@ -39,11 +43,23 @@ builder.Services.AddScoped<ToastService>();
 builder.Services.AddLocalStorageServices();
 
 // Application Insights.
-builder.Services.AddSingleton<ITelemetryInitializer, TelemetryInitializer>();
+var assembly = Assembly.GetExecutingAssembly();
+var version = AppInfo.RetrieveInformationalVersion(assembly);
+const string roleName = "ShoppingApp.WebUI";
 builder.Services.AddApplicationInsightsTelemetry(options =>
 {
     options.ConnectionString = GlobalConfig.AppInsightsConnectionString;
 });
+builder.Services.ConfigureOpenTelemetryTracerProvider((sp, tracerBuilder) =>
+    tracerBuilder.ConfigureResource(r => r.AddService(
+        serviceName: roleName,
+        serviceInstanceId: roleName,
+        serviceVersion: version)));
+builder.Services.ConfigureOpenTelemetryLoggerProvider((sp, loggerBuilder) =>
+    loggerBuilder.ConfigureResource(r => r.AddService(
+        serviceName: roleName,
+        serviceInstanceId: roleName,
+        serviceVersion: version)));
 
 // Configure Microsoft Orleans Client
 if (builder.Environment.IsDevelopment())

@@ -2,7 +2,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using Azure.Data.Tables;
-using Microsoft.ApplicationInsights.Extensibility;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Orleans.Configuration;
 using ShoppingApp.Common;
 using ShoppingApp.Grains;
@@ -12,11 +14,23 @@ using ShoppingApp.SiloHost.MicrosoftSqlServer;
 var builder = WebApplication.CreateBuilder(args);
 
 // Application Insights.
-builder.Services.AddSingleton<ITelemetryInitializer, TelemetryInitializer>();
+var assembly = Assembly.GetExecutingAssembly();
+var version = AppInfo.RetrieveInformationalVersion(assembly);
+const string roleName = "ShoppingApp.SiloHost";
 builder.Services.AddApplicationInsightsTelemetry(options =>
 {
 	options.ConnectionString = GlobalConfig.AppInsightsConnectionString;
 });
+builder.Services.ConfigureOpenTelemetryTracerProvider((sp, tracerBuilder) =>
+	tracerBuilder.ConfigureResource(r => r.AddService(
+		serviceName: roleName,
+		serviceInstanceId: roleName,
+		serviceVersion: version)));
+builder.Services.ConfigureOpenTelemetryLoggerProvider((sp, loggerBuilder) =>
+	loggerBuilder.ConfigureResource(r => r.AddService(
+		serviceName: roleName,
+		serviceInstanceId: roleName,
+		serviceVersion: version)));
 
 builder.Host.UseOrleans((context, siloBuilder) =>
 {

@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using Azure.Data.Tables;
-using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights;
 using Orleans.Configuration;
 using ShoppingApp.Common;
 using ShoppingApp.Grains;
@@ -12,11 +12,7 @@ using ShoppingApp.SiloHost.MicrosoftSqlServer;
 var builder = WebApplication.CreateBuilder(args);
 
 // Application Insights.
-builder.Services.AddSingleton<ITelemetryInitializer, TelemetryInitializer>();
-builder.Services.AddApplicationInsightsTelemetry(options =>
-{
-	options.ConnectionString = GlobalConfig.AppInsightsConnectionString;
-});
+builder.Services.AddApplicationInsights(GlobalConfig.AppInsightsConnectionString);
 
 builder.Host.UseOrleans((context, siloBuilder) =>
 {

@@ -1,8 +1,8 @@
-using System.Reflection;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using ShoppingApp.Common;
+using System.Reflection;
 
 namespace ShoppingApp.SiloHost;
 
@@ -13,7 +13,7 @@ internal static class TelemetryInitializer
         var assembly = Assembly.GetExecutingAssembly();
         var version = AppInfo.RetrieveInformationalVersion(assembly);
         const string roleName = "ShoppingApp.SiloHost";
-        var instanceId = $"{roleName}-{DateTimeOffset.UtcNow:yyyyMMddTHHmmssZ}-{System.Guid.NewGuid():N}";
+        var instanceId = $"{roleName}-{DateTimeOffset.UtcNow:yyyyMMddTHHmmssZ}-{Guid.NewGuid():N}";
 
         services.AddApplicationInsightsTelemetry(options =>
         {

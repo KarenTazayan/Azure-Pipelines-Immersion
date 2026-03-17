@@ -10,6 +10,9 @@ using ShoppingApp.WebUI.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Application Insights.
+builder.Services.AddApplicationInsights(GlobalConfig.AppInsightsConnectionString);
+
 // Scalability on Azure Container Apps for Blazor based WebUI.
 if (!builder.Environment.IsDevelopment())
 {
@@ -24,9 +27,6 @@ if (!builder.Environment.IsDevelopment())
         options.ServerStickyMode = Microsoft.Azure.SignalR.ServerStickyMode.Required;
     });
 }
-
-// Application Insights.
-builder.Services.AddApplicationInsights(GlobalConfig.AppInsightsConnectionString);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

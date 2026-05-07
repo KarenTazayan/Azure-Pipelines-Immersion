@@ -36,17 +36,7 @@ wsl --install -d Ubuntu-24.04 --name AZP_Ubuntu-24.04
 ```
 Install [Docker Engine](https://docs.docker.com/engine/install/ubuntu/) on Ubuntu.
 ```
-$ sudo apt-get update
-$ sudo apt-get install ca-certificates curl
-$ sudo install -m 0755 -d /etc/apt/keyrings
-$ sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-$ sudo chmod a+r /etc/apt/keyrings/docker.asc
-$ echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-$ sudo apt-get update
-$ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-get update && sudo apt-get install -y ca-certificates curl && sudo install -m 0755 -d /etc/apt/keyrings && sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc && sudo chmod a+r /etc/apt/keyrings/docker.asc && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 Start Docker service.
 ```
@@ -62,22 +52,22 @@ git clone https://dev.azure.com/azure-pipelines-immersion-1/_git/ShoppingApp
 and interop with it from Ubuntu-24.04 by the following way:
 ```
 $ cd /mnt/c/Repos/ShoppingApp/build/azure-pipelines-agents/debian-12.x/
-$ sudo docker build -t azure-pipelines-agents-debian-12.12:30042026 .
+$ sudo docker build -t azure-pipelines-agents-debian-12.12:07052026 .
 ```
 
 ### 3. Create a self-hosted agents pool for the Azure DevOps organization.
 
 Build an agent docker image by using files from "build\azure-pipelines-agents" based on Debian image
 ```
-docker build -t azure-pipelines-agents-debian-12.12:30042026 .
+docker build -t azure-pipelines-agents-debian-12.12:07052026 .
 ```
 or on Ubuntu image.
 ```
-docker build -t azure-pipelines-agents-ubuntu-24.04:30042026 .
+docker build -t azure-pipelines-agents-ubuntu-24.04:07052026 .
 ```
 Also create Playwright image
 ```
-docker build -t azure-pipelines-agents-playwright-1.x:1.58.0.30042026 .
+docker build -t azure-pipelines-agents-playwright-1.x:1.58.0.07052026 .
 ```
 Create [Azure DevOps personal access token (PAT token)](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate). For the scope select: Agent Pools (read, manage), Deployment group (read, manage).  
 Run Debian or Ubuntu based Azure Pipelines agent by using the following command:
@@ -87,7 +77,7 @@ sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
     --group-add $SOCKET_GID \
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
     -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Debian-12.12 \
-    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-12.12 azure-pipelines-agents-debian-12.12:30042026
+    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-12.12 azure-pipelines-agents-debian-12.12:07052026
 ```
 The syntax above uses Bash. If you use PowerShell shell, just replace "\\" (backslash) with "`" (backtick).  
   
@@ -118,7 +108,7 @@ sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock --dns=8.8.8.8 
     --group-add $SOCKET_GID
     -e AZP_URL=https://dev.azure.com/azure-pipelines-immersion-1 \
     -e AZP_TOKEN=<PAT token> -e AZP_AGENT_NAME=01_Debian-12.12 \
-    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-12.12 azure-pipelines-agents-debian-12.12:30042026
+    -e AZP_POOL=Default -e AZP_WORK=_work --name 01_Debian-12.12 azure-pipelines-agents-debian-12.12:07052026
 ```
 
 Run the Azure Pipeline, wait till it completely deploy the solution and enjoy it.

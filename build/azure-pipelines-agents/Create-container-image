@@ -1,3 +1,3 @@
-# sudo docker build -t azure-pipelines-agents-ubuntu-24.04:30042026 .
-# sudo docker build -t azure-pipelines-agents-debian-12.12:30042026 .
-# sudo docker build -t azure-pipelines-agents-playwright-1.x:1.58.0.30042026 .
+# sudo docker build -t azure-pipelines-agents-ubuntu-24.04:07052026 .
+# sudo docker build -t azure-pipelines-agents-debian-12.12:07052026 .
+# sudo docker build -t azure-pipelines-agents-playwright-1.x:1.58.0.07052026 .

@@ -35,21 +35,20 @@ public partial class ManageProductModal
 
     private void Bogus() => Product = Product.GetBogusFaker().Generate();
 
-    private Task Save()
+  private async Task Save()
+  {
+    if (_form is not null)
     {
-        if (_form is not null)
-        {
-            _form.Validate();
-            if (_form.IsValid)
-            {
-                return OnValidSubmitAsync();
-            }
-        }
+      await _form.ValidateAsync();
 
-        return Task.CompletedTask;
+      if (_form.IsValid)
+      {
+        await OnValidSubmitAsync();
+      }
     }
+  }
 
-    private async Task OnValidSubmitAsync()
+  private async Task OnValidSubmitAsync()
     {
         if (!string.IsNullOrWhiteSpace(Product.Id) && ProductUpdated.HasDelegate)
         {

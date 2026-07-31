@@ -8,7 +8,7 @@ stages:
       name: Default
       demands:
           - dotnet
-          - JETBRAINS_RESHARPER_GLOBALTOOLS -equals 2026.1.1
+          - JETBRAINS_RESHARPER_GLOBALTOOLS -equals 2026.2.0
     variables:
       buildPlatform: 'Any CPU'
       buildConfiguration: 'Release'

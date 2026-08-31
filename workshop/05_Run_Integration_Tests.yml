@@ -23,9 +23,9 @@ stages:
             configuration: '$(buildConfiguration)'
   
         # Run Tests
-      - task: CmdLine@2
-        displayName: 'Run Integration Tests'
-        inputs:
-          script: |
-            dotnet run --project test/ShoppingApp.Tests
-            dotnet run --project test/ShoppingApp.Tests.FSharp
+        - task: CmdLine@2
+          displayName: 'Run Integration Tests'
+          inputs:
+            script: |
+              dotnet run --project test/ShoppingApp.Tests
+              dotnet run --project test/ShoppingApp.Tests.FSharp
